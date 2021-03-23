@@ -15,6 +15,7 @@ class RobomasterClient:
         self.__alive: bool = False
         self.__should_terminate: threading.Event = threading.Event()
 
+        self.__chassis_fwd: float = 0
         self.__gimbal_yaw: float = 0
 
         # Connect to the server.
@@ -51,6 +52,9 @@ class RobomasterClient:
 
     # PUBLIC METHODS
 
+    def set_chassis_fwd(self, rate: float) -> None:
+        self.__chassis_fwd = RobomasterClient.__rate_to_control_value(rate)
+
     def set_gimbal_yaw(self, rate: float) -> None:
         self.__gimbal_yaw = RobomasterClient.__rate_to_control_value(rate)
 
@@ -72,7 +76,7 @@ class RobomasterClient:
             time.sleep(0.1)
 
             # Construct the movement control command to send to the robot.
-            cmd: str = f"control {self.__gimbal_yaw}"
+            cmd: str = f"control {self.__chassis_fwd} {self.__gimbal_yaw}"
 
             # Send the command.
             self.__send_command(cmd)

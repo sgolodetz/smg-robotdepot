@@ -30,6 +30,7 @@ def main() -> None:
             for event in pygame.event.get():
                 pass
 
+            client.set_chassis_fwd(joystick.get_pitch())
             client.set_gimbal_yaw(joystick.get_yaw())
 
 

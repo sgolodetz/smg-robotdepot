@@ -39,8 +39,19 @@ while msg != "exit":
 
     tokens = msg.split(" ")
     if tokens[0] == "control":
-        gimbal_yaw = int(tokens[1])
-        print(gimbal_yaw)
+        chassis_fwd = int(tokens[1])
+        gimbal_yaw = int(tokens[2])
+        print(chassis_fwd, gimbal_yaw)
+
+        if abs(chassis_fwd) >= 10:
+            chassis_ctrl.set_trans_speed(1.0 * abs(chassis_fwd) / 100)
+            if chassis_fwd >= 0:
+                chassis_ctrl.move(0)
+            else:
+                chassis_ctrl.move(180)
+        else:
+            chassis_ctrl.stop()
+
         gimbal_ctrl.set_rotate_speed(abs(gimbal_yaw))
         if gimbal_yaw >= 0:
             gimbal_ctrl.rotate(rm_define.gimbal_right)
