@@ -1,2 +1,0 @@
-class RobomasterServer:
-    pass
