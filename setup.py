@@ -14,9 +14,7 @@ setup(
     url="https://github.com/sgolodetz/smg-robotdepot",
     packages=find_packages(include=["smg.robotdepot", "smg.robotdepot.*"]),
     include_package_data=True,
-    install_requires=[
-        "smg-joysticks"  # FIXME: This dependency can be removed once the examples are moved to smg-rescueflight.
-    ],
+    install_requires=[],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
