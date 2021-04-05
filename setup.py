@@ -15,7 +15,7 @@ setup(
     packages=find_packages(include=["smg.robotdepot", "smg.robotdepot.*"]),
     include_package_data=True,
     install_requires=[
-        "smg-rotory"  # FIXME: This should ultimately be replaced with an smg-joysticks dependency.
+        "smg-joysticks"  # FIXME: This dependency can be removed once the examples are moved to smg-rescueflight.
     ],
     classifiers=[
         "Programming Language :: Python :: 3",

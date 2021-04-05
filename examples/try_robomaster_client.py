@@ -3,8 +3,8 @@ import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
 
+from smg.joysticks import FutabaT6K
 from smg.robotdepot import RobomasterClient
-from smg.rotory.joysticks import FutabaT6K
 
 
 def main() -> None:
