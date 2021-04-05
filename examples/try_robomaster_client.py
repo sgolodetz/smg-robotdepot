@@ -25,11 +25,15 @@ def main() -> None:
     joystick = FutabaT6K(joystick_idx)
     joystick.calibrate()
 
+    # Construct the Robomaster client.
     with RobomasterClient(("192.168.2.1", 7860)) as client:
+        # Repeatedly.
         while True:
-            for event in pygame.event.get():
+            # Process and ignore any pygame events.
+            for _ in pygame.event.get():
                 pass
 
+            # Update the movement of the robot based on the values output by the Futaba T6K.
             client.set_chassis_fwd(joystick.get_pitch())
             client.set_gimbal_yaw(joystick.get_yaw())
 
