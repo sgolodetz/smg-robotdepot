@@ -6,16 +6,15 @@ select = force_import('select')
 socket = force_import('socket')
 struct = force_import('struct')
 
+# Set up the server socket and listen for a connection.
 server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 server_sock.bind(("192.168.2.1", 7860))
-
-# Listen for a connection.
 server_sock.listen(1)
+
 print(f"Listening for a connection on 192.168.2.1:7860...")
 
 client_sock = None
-
 while client_sock is None:
     timeout = 0.1
     readable, _, _ = select.select([server_sock], [], [], timeout)
@@ -25,11 +24,14 @@ while client_sock is None:
             client_sock, client_endpoint = server_sock.accept()
             print(f"Accepted connection from client @ {client_endpoint}")
 
+# Set the robot's chassis to follow its gimbal.
 #robot_ctrl.set_mode(rm_define.robot_mode_free)
 robot_ctrl.set_mode(rm_define.robot_mode_chassis_follow)
 
+# Until told to stop:
 msg = ""
 while msg != "exit":
+    # Read a message from the client.
     buf = client_sock.recv(struct.calcsize("<i"))
     length = struct.unpack("<i", buf)[0]
     print(length)
@@ -37,12 +39,17 @@ while msg != "exit":
     msg = buf.decode("utf-8")
     print(msg)
 
+    # Split the message into tokens.
     tokens = msg.split(" ")
+
+    # If the message is a control message:
     if tokens[0] == "control":
+        # Extract the control values.
         chassis_fwd = int(tokens[1])
         gimbal_yaw = int(tokens[2])
         print(chassis_fwd, gimbal_yaw)
 
+        # Use the control values to move the robot appropriately.
         if abs(chassis_fwd) >= 10:
             chassis_ctrl.set_trans_speed(1.0 * abs(chassis_fwd) / 100)
             if chassis_fwd >= 0:
@@ -58,6 +65,7 @@ while msg != "exit":
         else:
             gimbal_ctrl.rotate(rm_define.gimbal_left)
 
+# Gracefully close the server and client sockets.
 server_sock.shutdown(socket.SHUT_RDWR)
 server_sock.close()
 
